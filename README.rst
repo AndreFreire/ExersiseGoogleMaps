@@ -14,11 +14,13 @@ Install requirements: ::
     make requirements
 
 
-Create database tables(MySql): ::
-    On MySQL console:
+Create database tables(MySql): 
+    On MySQL console: ::
+
     	create database exersisegooglemaps;
 
-    On project folder:
+    On project folder: ::
+
         make migrate
 
 Run the project: ::
@@ -29,7 +31,7 @@ Run the project: ::
 Tests
 -----
 
-To run the test suite, execute: ::
+To run the test, execute: ::
 
     make test
 
