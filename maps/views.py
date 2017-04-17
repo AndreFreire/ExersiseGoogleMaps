@@ -7,12 +7,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 import json
+import logging
 import urllib
 
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @require_http_methods(["GET"])
 def search_place(request):
+    logger.info(u'Searching place on Google')
     query_term = request.GET.get('query')
     base_url = settings.GOOGLE_SEARCH_URL
     google_key = settings.GOOGLE_API_KEY
@@ -25,19 +28,21 @@ def search_place(request):
     try:
         http_response = urllib.urlopen(request_url)
     except IOError:
+        logger.error(u'Connection failure in url:'.format(request_url))
         return JsonResponse(
             {'message': 'Connection failure'},
             status=503
         )
 
     response = parse_response(http_response)
-
+    logger.info(u'Success search')
     return JsonResponse({'response': response})
 
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def save_place(request):
+    logger.info('Saving place')
     google_id_place = request.POST.get('google_id_place')
     base_url = settings.GOOGLE_DETAIL_URL
     google_key = settings.GOOGLE_API_KEY
@@ -50,13 +55,14 @@ def save_place(request):
     try:
         response = urllib.urlopen(request_url)
     except IOError:
+        logger.error(u'Connection failure in url:'.format(request_url))
         return JsonResponse(
             {'message': 'Connection failure'},
             status=503
         )
 
     saved_id = save_response(response.read())
-
+    logger.info(u'Success save')
     return JsonResponse({
         'message': 'Success',
         'id': saved_id
@@ -66,14 +72,16 @@ def save_place(request):
 @csrf_exempt
 @require_http_methods(["DELETE"])
 def delete_place(request, id_place):
+    logger.info(u'Deleting place')
     try:
         Place.objects.get(id=id_place).delete()
     except ObjectDoesNotExist:
+        logger.info('Place not found')
         return JsonResponse(
             {'message': 'Not Found'},
             status=404
         )
-
+    logger.info(u'Success delete')
     return JsonResponse({
         'message': 'Success'
     })
@@ -82,6 +90,7 @@ def delete_place(request, id_place):
 @csrf_exempt
 @require_http_methods(["GET"])
 def list_place(request):
+    logger.info(u'Listing places')
     places = Place.objects.all()
     json_places = []
 
@@ -89,8 +98,10 @@ def list_place(request):
         json_places.append(parse_model_place(place))
 
     if json_places:
+        logger.info(u'Success list')
         return JsonResponse({'result': json_places})
 
+    logger.info('List not found')
     return JsonResponse(
         {'message': 'Not Found'},
         status=404
@@ -100,14 +111,17 @@ def list_place(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_place(request, id_place):
+    logger.info(u'Getting place')
     try:
         place = Place.objects.get(id=id_place)
     except ObjectDoesNotExist:
+        logger.info('List not found')
         return JsonResponse(
             {'message': 'Not Found'},
             status=404
         )
 
+    logger.info(u'Success get')
     return JsonResponse({
         'message': 'Success',
         'result': parse_model_place(place)
