@@ -36,6 +36,7 @@ To run the test, execute: ::
     make test
 
 Exemples endpoint:
+-----
 
 Search Place(GET): ::
 
