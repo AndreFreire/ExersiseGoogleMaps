@@ -4,26 +4,26 @@ ExersiseGoogleMaps
 Installation
 ------------
 
-Create a virtualenv (use ``virtualenvwrapper``): ::
+Create a virtualenv: ::
 
-    mkvirtualenv ExersiseGoogleMaps
-
-
-Install requirements via ``pip``: ::
-
-    pip install django/requirements/development.txt
+    virtualenv ExersiseGoogleMaps
 
 
-Create database tables: ::
+Install requirements: ::
 
-    # on django/ExersiseGoogleMaps
-    ./manage.py syncdb --all --settings=settings.development
+    make requirements
 
+
+Create database tables(MySql): ::
+    On MySQL console:
+    	create database exersisegooglemaps;
+
+    On project folder:
+        make migrate
 
 Run the project: ::
 
-    # on django/ExersiseGoogleMaps
-    ./manage.py runserver --settings=settings.development
+    make run
 
 
 Tests
@@ -34,6 +34,3 @@ To run the test suite, execute: ::
     make test
 
 
-To show coverage details (in HTML), use: ::
-
-    make test html

@@ -127,3 +127,5 @@ STATIC_URL = '/static/'
 GOOGLE_API_KEY = 'AIzaSyCMZrfG92IyuCzvFxix-GATAYtZJqtvxZw'
 
 GOOGLE_SEARCH_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json'
+
+GOOGLE_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
